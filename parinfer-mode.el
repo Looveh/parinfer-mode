@@ -309,7 +309,10 @@
 (defun parinfer-update-insertion-pt (result)
   (let* ((line (nth (gethash "line-no" result) (gethash "lines" result)))
          (prev-ch-idx (- (gethash "x" result) -1))
-         (prev-ch (if (>= prev-ch-idx 0) (nth prev-ch-idx line) nil))
+         (prev-ch (if (and (>= prev-ch-idx 0)
+                           (< prev-ch-idx (length line)))
+                      (substring line prev-ch-idx (+ prev-ch-idx 1))
+                    nil))
          (ch (gethash "ch" result))
          (should-insert
           (and (parinfer-is-in-code (gethash "stack" result))
