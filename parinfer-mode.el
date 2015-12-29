@@ -235,9 +235,13 @@
                                 (not should-pass)))))
     (puthash "cursor-in-comment"
              (or (gethash "cursor-in-comment" result)
-                 (and (= (gethash "cursor-line" result) (gethash "line-no" result))
-                      (= (gethash "x" result) (gethash "cursor-x" result))
-                      (parinfer-is-in-comment stack)))
+                 (let ((cursor-line (gethash "cursor-line" result))
+                       (line-no (gethash "line-no" result))
+                       (x (gethash "x" result))
+                       (cursor-x (gethash "cursor-x" result)))
+                   (and (and cursor-line line-no (= cursor-line line-no))
+                        (and x cursor-x (= x cursor-x))
+                        (parinfer-is-in-comment stack))))
              result)
     (let ((should-update (and in-code
                               (not escaping)
