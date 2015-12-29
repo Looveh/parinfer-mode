@@ -612,6 +612,14 @@
     (parinfer-make-hash "text" out-text
                         "success" (gethash "success" result))))
 
+;;; Public API
+
+(defun parinfer-indent-mode (text &optional options)
+  (parinfer-format-text text options))
+
+(defun parinfer-paren-mode (text &optional options)
+  (parinfer-format-text-paren text options))
+
 ;;; Package definition
 
 (provide 'parinfer-mode)
