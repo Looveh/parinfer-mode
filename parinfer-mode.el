@@ -119,7 +119,7 @@
     (if (parinfer-is-escaping stack)
         (pop stack)
       (if (parinfer-is-in-code stack)
-          (let ((to-push (parinf-make-hash
+          (let ((to-push (parinfer-make-hash
                           "x" (gethash "x" result)
                           "ch" (gethash "ch" result)
                           "indent-delta" (gethash "indent-delta" result))))
@@ -163,8 +163,8 @@
   (let ((stack (gethash "stack" result)))
     (if (parinfer-is-escaping stack)
         (pop stack)
-      (push (parinf-make-hash "x" (gethash "x" result)
-                              "ch" (gethash "ch" result))
+      (push (parinfer-make-hash "x" (gethash "x" result)
+                                "ch" (gethash "ch" result))
             stack))))
 
 (defun parinfer-push-quote (result)
@@ -311,8 +311,8 @@
                             (gethash "cursor-line" result))))))
     (if should-insert
         (setf (gethash "insert" result)
-              (parinf-make-hash "line-no" (gethash "line-no" result)
-                                "x" (+ (gethash "x" result) 1))))))
+              (parinfer-make-hash "line-no" (gethash "line-no" result)
+                                  "x" (+ (gethash "x" result) 1))))))
 
 (defun parinfer-process-indent-trigger (result)
   (parinfer-close-parens result (gethash "x" result))
