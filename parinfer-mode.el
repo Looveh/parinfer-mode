@@ -55,9 +55,12 @@
           (substring orig idx)))
 
 (defun parinfer-replace-string-range (orig start end replace)
-  (concat (substring orig 0 start)
-          replace
-          (substring orig end)))
+  (let ((end (if (<= end (length orig))
+                 end
+               (length orig))))
+    (concat (substring orig 0 start)
+            replace
+            (substring orig end))))
 
 (defun parinfer-remove-string-range (orig start end)
   (concat (substring orig 0 start)
