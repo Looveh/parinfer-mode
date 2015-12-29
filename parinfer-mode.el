@@ -287,9 +287,9 @@
                (line (nth (gethash "line-no" result)
                           (gethash "lines" result)))
                (remove-count
-                (count t (mapcar
-                          (lambda (x) (parinfer-is-close-paren x))
-                          line)))
+                (cl-count t (mapcar
+                             (lambda (x) (parinfer-is-close-paren x))
+                             line)))
                (ignore-count (- (length backup) remove-count)))
           (while (not (= ignore-count (length backup)))
             (push (pop backup) stack))
