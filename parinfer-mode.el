@@ -566,15 +566,15 @@
     (if (and start end)
         (let ((line (nth (gethash "line-no" result)
                          (gethash "lines" result)))
-              (new-trail '())
+              (new-trail "")
               (space-count 0)
               (i start))
           (while (< i end)
             (if (parinfer-is-close-paren (nth i line))
-                (setf new-trail (cons (nth i line) new-trail))
+                (setf new-trail (concat new-trail
+                                        (substring line i (+ i 1))))
               (setf space-count (+ space-count 1)))
             (setf i (+ i 1)))
-          (setf new-trail (apply 'concat (reverse new-trail)))
           (if (> space-count 0)
               (progn
                 (setf (nth (gethash "line-no" result)
