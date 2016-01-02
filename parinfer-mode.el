@@ -496,11 +496,15 @@
     (setf (gethash "max-indent" result) nil)))
 
 (defun parinfer-handle-cursor-delta (result)
-  (let ((has-cursor-delta (and (= (gethash "cursor-line" result)
-                                  (gethash "line-no" result))
-                               (= (gethash "cursor-x" result)
-                                  (gethash "x" result))
-                               (gethash "cursor-x" result))))
+  (let* ((cursor-line (gethash "cursor-line" result))
+         (line-no (gethash "line-no" result))
+         (cursor-x (gethash "cursor-x" result))
+         (x (gethash "x" result))
+         (has-cursor-delta (and (and cursor-line
+                                     line-no
+                                     (= cursor-line line-no))
+                                (= cursor-x x)
+                                (gethash "cursor-x" result))))
     (if (and has-cursor-delta
              (number-or-marker-p (gethash "cursor-dx" result)))
         (setf (gethash "indent-delta" result)
