@@ -601,7 +601,8 @@
     (while (and (< i (length chars)) continue)
       (parinfer-process-char-paren result (substring chars i (+ i 1)))
       (if (gethash "quit" result)
-          (setf continue nil)))))
+          (setf continue nil))
+      (setf i (+ i 1)))))
 
 (defun parinfer-finalize-result-paren (result)
   (setf (gethash "success" result)
@@ -621,7 +622,8 @@
       (while (and (< i (length lines)) continue)
         (parinfer-process-line result (nth i lines))
         (if (gethash "quit" result)
-            (setf continue nil)))
+            (setf continue nil))
+        (setf i (+ i 1)))
       (parinfer-finalize-result-paren result)
       result)))
 
