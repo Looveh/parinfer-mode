@@ -126,21 +126,23 @@
                           "x" (gethash "x" result)
                           "ch" (gethash "ch" result)
                           "indent-delta" (gethash "indent-delta" result))))
-            (push to-push stack))))))
-
+            (puthash "stack"
+                     (reverse (cons to-push (reverse stack)))
+                     result))))))
 
 (defun parinfer-push-close (result)
   (let ((stack (gethash "stack" result))
         (backup (gethash "backup" result))
         (ch (gethash "ch" result)))
     (if (parinfer-is-escaping stack)
-        (pop stack)
+        (puthash "stack" (reverse (cdr (reverse stack))) result)
       (if (parinfer-is-in-code stack)
           (if (parinfer-is-valid-closer stack ch)
-              (let ((opener (pop stack)))
+              (let ((opener (car (reverse stack))))
                 (progn
+                  (puthash "stack" (reverse (cdr (reverse stack))) result)
                   (puthash "max-indent" (gethash "x" opener) result)
-                  (push opener backup)))
+                  (puthash "backup" (cons opener backup) result)))
             (puthash "ch" "" result))))))
 
 (defun parinfer-push-tab (result)
@@ -152,9 +154,12 @@
     (if (parinfer-is-escaping stack)
         (pop stack)
       (if (parinfer-is-in-code stack)
-          (push (parinfer-make-hash "x" (gethash "x" result)
-                                    "ch" (gethash "ch" result))
-                stack)))))
+          (puthash "stack"
+                   (cons (parinfer-make-hash
+                          "x" (gethash "x" result)
+                          "ch" (gethash "ch" result))
+                         stack)
+                   result)))))
 
 (defun parinfer-push-newline (result)
   (let ((stack (gethash "stack" result)))
@@ -166,9 +171,12 @@
   (let ((stack (gethash "stack" result)))
     (if (parinfer-is-escaping stack)
         (pop stack)
-      (push (parinfer-make-hash "x" (gethash "x" result)
-                                "ch" (gethash "ch" result))
-            stack))))
+      (puthash "stack"
+               (cons (parinfer-make-hash
+                      "x" (gethash "x" result)
+                      "ch" (gethash "ch" result))
+                     stack)
+               result))))
 
 (defun parinfer-push-quote (result)
   (let ((stack (gethash "stack" result)))
@@ -179,9 +187,10 @@
       (puthash "quote-danger"
                (not (gethash "quote-danger" result))
                result))
-     (t (push (parinfer-make-hash "x" (gethash "x" result)
-                                  "ch" (gethash "ch" result))
-              stack)))))
+     (t (puthash "stack"
+                 (parinfer-make-hash "x" (gethash "x" result)
+                                     "ch" (gethash "ch" result))
+                 result)))))
 
 (defun parinfer-push-default (result)
   (let ((stack (gethash "stack" result)))
@@ -204,14 +213,15 @@
 
 (defun parinfer-close-parens (result indent-x)
   (let ((indent-x (or indent-x 0))
-        (stack (gethash "stack" result))
         (parens '()))
     (catch 'break
-      (while (> (length stack) 0)
-        (let ((opener (parinfer-peek stack 1)))
+      (while (> (length (gethash "stack" result)) 0)
+        (let ((opener (parinfer-peek (gethash "stack" result) 1)))
           (if (and opener (>= (gethash "x" opener) indent-x))
               (progn
-                (pop stack)
+                (puthash "stack"
+                         (reverse (cdr (reverse (gethash "stack" result))))
+                         result)
                 (add-to-list 'parens (gethash (gethash "ch" opener) parinfer-parens)))
             (throw 'break t)))))
     (let ((new-string (parinfer-insert-string
