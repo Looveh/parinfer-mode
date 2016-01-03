@@ -41,6 +41,9 @@
 
 (message "Begin running tests")
 
+(setf parinfer-test-successful-count 0)
+(setf parinfer-test-failed-count 0)
+
 (parinfer-test-run-tests
  'parinfer-indent-mode
  parinfer-test-indent-mode-cases)
