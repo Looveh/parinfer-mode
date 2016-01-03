@@ -121,8 +121,8 @@
        (not (parinfer-is-in-comment stack))))
 
 (defun parinfer-is-valid-closer (stack ch)
-  (string= (parinfer-get-prev-ch stack 1)
-           (gethash "ch" parinfer-parens)))
+  (string= (parinfer-get-prev-ch stack 0)
+           (gethash ch parinfer-parens)))
 
 ;;; Lisp reader: Stack operations
 
