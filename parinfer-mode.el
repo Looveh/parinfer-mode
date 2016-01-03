@@ -336,8 +336,12 @@
                (or (not (parinfer-is-whitespace ch))
                    (string= prev-ch parinfer-backslash))
                (or (not (parinfer-is-close-paren ch))
-                   (string= (gethash "line-no" result)
-                            (gethash "cursor-line" result))))))
+                   (let ((line-no (gethash "line-no" result))
+                         (cursor-line (gethash "cursor-line" result)))
+                     (and line-no
+                          cursor-line
+                          (= line-no
+                             cursor-line)))))))
     (if should-insert
         (setf (gethash "insert" result)
               (parinfer-make-hash "line-no" (gethash "line-no" result)
