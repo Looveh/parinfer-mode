@@ -464,7 +464,7 @@
 
 (defun parinfer-append-paren-trail (result)
   (let* ((opener (parinfer-pop result "stack"))
-         (close-ch (nth (gethash "ch" opener) parinfer-parens))
+         (close-ch (gethash (gethash "ch" opener) parinfer-parens))
          (i (gethash "line-no" (gethash "insert" result)))
          (line (nth i (gethash "lines" result))))
     (setf (gethash "max-indent" result) (gethash "x" opener))
