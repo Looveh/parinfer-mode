@@ -221,20 +221,20 @@
 
 (defun parinfer-close-parens (result indent-x)
   (let ((indent-x (or indent-x 0))
-        (parens '())
+        (parens "")
         (continue t))
     (while (and (> (length (gethash "stack" result)) 0) continue)
       (let ((opener (parinfer-peek (gethash "stack" result))))
         (if (and opener (>= (gethash "x" opener) indent-x))
             (progn
               (parinfer-pop result "stack")
-              (add-to-list 'parens (gethash (gethash "ch" opener) parinfer-parens)))
+              (setf parens (concat parens (gethash (gethash "ch" opener) parinfer-parens))))
           (setf continue nil))))
     (let ((new-string (parinfer-insert-string
                        (nth (gethash "line-no" (gethash "insert" result))
                             (gethash "lines" result))
                        (gethash "x" (gethash "insert" result))
-                       (apply 'concat (reverse parens)))))
+                       parens)))
       (setf (nth (gethash "line-no" (gethash "insert" result))
                  (gethash "lines" result))
             new-string))))
