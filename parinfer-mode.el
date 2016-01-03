@@ -313,7 +313,7 @@
                              (lambda (x) (parinfer-is-close-paren (char-to-string x)))
                              line)))
                (ignore-count (- (length backup) remove-count)))
-          (while (not (= ignore-count (length backup)))
+          (while (not (= ignore-count (length (gethash "backup" result))))
             (parinfer-push result "stack" (parinfer-pop result "backup")))
           (setf (nth (gethash "line-no" result) (gethash "lines" result))
                 (parinfer-remove-string-range line start end))
