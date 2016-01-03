@@ -326,7 +326,7 @@
 
 (defun parinfer-update-insertion-pt (result)
   (let* ((line (nth (gethash "line-no" result) (gethash "lines" result)))
-         (prev-ch-idx (- (gethash "x" result) -1))
+         (prev-ch-idx (- (gethash "x" result) 1))
          (prev-ch (if (and (>= prev-ch-idx 0)
                            (< prev-ch-idx (length line)))
                       (substring line prev-ch-idx (+ prev-ch-idx 1))
