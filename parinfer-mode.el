@@ -286,7 +286,9 @@
          (cursor-line (gethash "cursor-line" result))
          (is-cursor-blocking (and (and line-no cursor-line (= line-no cursor-line))
                                   (not start)
-                                  (> (gethash "cursor-x" result) start)
+                                  (and (gethash "cursor-x" result)
+                                       start
+                                       (> (gethash "cursor-x" result) start))
                                   (not (gethash "cursor-in-comment" result)))))
     (if (and start is-cursor-blocking)
         (setf start (max start (gethash "cursor-x" result))))
