@@ -97,18 +97,21 @@
 
 ;;; Lisp reader: Stack states
 
-(defun parinfer-peek (l)
-  (car l))
+(defun parinfer-peek (stack &optional i)
+  (let ((i (or i 0)))
+    (if (< i 0)
+        nil
+      (nth i stack))))
 
 (defun parinfer-get-prev-ch (stack i)
-  (let ((e (parinfer-peek stack)))
+  (let ((e (parinfer-peek stack i)))
     (if e (gethash "ch" e) nil)))
 
 (defun parinfer-is-escaping (stack)
-  (string= (parinfer-get-prev-ch stack 1) parinfer-backslash))
+  (string= (parinfer-get-prev-ch stack 0) parinfer-backslash))
 
 (defun parinfer-prev-non-esc-ch (stack)
-  (parinfer-get-prev-ch stack (if (parinfer-is-escaping stack) 2 1)))
+  (parinfer-get-prev-ch stack (if (parinfer-is-escaping stack) 1 0)))
 
 (defun parinfer-is-in-str (stack)
   (string= (parinfer-prev-non-esc-ch stack) parinfer-double-quoute))
