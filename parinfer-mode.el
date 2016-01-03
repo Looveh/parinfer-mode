@@ -310,7 +310,7 @@
                           (gethash "lines" result)))
                (remove-count
                 (cl-count t (mapcar
-                             (lambda (x) (parinfer-is-close-paren x))
+                             (lambda (x) (parinfer-is-close-paren (char-to-string x)))
                              line)))
                (ignore-count (- (length backup) remove-count)))
           (while (not (= ignore-count (length backup)))
