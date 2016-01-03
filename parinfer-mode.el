@@ -293,7 +293,7 @@
     (if (and start is-cursor-blocking)
         (setf start (max start (gethash "cursor-x" result))))
     (if (and end is-cursor-blocking)
-        (setf start (max start (gethash "cursor-x" result))))
+        (setf end (max end (gethash "cursor-x" result))))
     (if (or (and (not start) (not end))
             (and start end (= start end)))
         (progn
