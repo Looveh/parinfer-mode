@@ -588,7 +588,7 @@
               (space-count 0)
               (i start))
           (while (< i end)
-            (if (parinfer-is-close-paren (nth i line))
+            (if (parinfer-is-close-paren (substring line i (+ i 1)))
                 (setf new-trail (concat new-trail
                                         (substring line i (+ i 1))))
               (setf space-count (+ space-count 1)))
